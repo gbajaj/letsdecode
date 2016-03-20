@@ -142,7 +142,7 @@ public class TreeProblemsTest {
 	@Test
 	public void inorderIterator() {
 		// int[] b = { 1, 2, 3, 4, 5, 6, 7, 8 };
-//		int[] b = { 2, 7, 5, 6, 11, 2, 5, 4, 9 };
+		// int[] b = { 2, 7, 5, 6, 11, 2, 5, 4, 9 };
 		int[] b = { 4, 2, 5, 1, 6, 3, 7 };
 		BalancedBST bst = new BalancedBST(b);
 		bst.call();
@@ -171,22 +171,134 @@ public class TreeProblemsTest {
 	@Test
 	public void boundryTraversal() {
 		int[] b = { 4, 2, 5, 1, 6, 3, 7 };
-		int out [] = {1, 2, 4, 5, 6, 7, 3};
+		int out[] = { 1, 2, 4, 5, 6, 7, 3 };
 		ArrayList<Integer> expected = new ArrayList<>();
-		for (Integer  o: out) {
+		for (Integer o : out) {
 			expected.add(o);
 		}
 		BalancedBST bst = new BalancedBST(b);
 		bst.call();
 		TreeProblems t = new TreeProblems(null);
 		ArrayList<TreeNode> list = t.boundryTraversal(bst.root);
-		ArrayList<Integer>  outList= new ArrayList<>();
+		ArrayList<Integer> outList = new ArrayList<>();
 
-		
 		Iterator<TreeNode> it = list.iterator();
 		while (it.hasNext()) {
 			outList.add(it.next().val);
 		}
-		Assert.assertEquals(expected,  outList);
+		Assert.assertEquals(expected, outList);
 	}
+
+	@Test
+	public void findAllPathsTest() {
+		int[] b = { 2, 3, -2, 2, 5, 4, -2, 3 };
+		int[] a = new int[b.length];
+
+		BalancedBST bst = new BalancedBST(b);
+		bst.call();
+
+		TreeProblems t = new TreeProblems(null);
+		t.findAllPaths(bst.root, 5, -1, -1, a);
+
+	}
+
+	@Test
+	public void findPathsTest() {
+		int[] b = { 2, 3, -2, 2, 5, 4, -2, 3 };
+		int[] a = new int[b.length];
+
+		BalancedBST bst = new BalancedBST(b);
+		bst.call();
+
+		TreeProblems t = new TreeProblems(null);
+		t.findPaths(bst.root, 2, 0, -1, a);
+	}
+
+	@Test
+	public void findBinaySum() {
+		int[] b = { 0, 1, 0, 1, 1, 0, 1, 1 };
+
+		BalancedBST bst = new BalancedBST(b);
+		bst.call();
+
+		TreeProblems t = new TreeProblems(null);
+		int[] result = new int[2];
+		t.findBinaySum(bst.root, result);
+		System.out.println(result[0]);
+
+	}
+
+	@Test
+	public void findRootToLeafSumTest() {
+		int[] b = { 2, 3, -2, 2, 5, 4, -2, 4 };
+
+		BalancedBST bst = new BalancedBST(b);
+		bst.call();
+
+		TreeProblems t = new TreeProblems(null);
+		Assert.assertTrue(t.findRootToLeafSum(bst.root, 7));
+		Assert.assertTrue(t.findRootToLeafSum(bst.root, 3));
+		Assert.assertTrue(t.findRootToLeafSum(bst.root, 11));
+		Assert.assertTrue(t.findRootToLeafSum(bst.root, 8));
+		Assert.assertFalse(t.findRootToLeafSum(bst.root, 55));
+
+	}
+
+	@Test
+	public void findKthNodeInOrderTest() {
+		int[] b = { 2, 3, -2, 2, 5, 4, -2, 4 };
+
+		BalancedBST bst = new BalancedBST(b);
+		bst.call();
+
+		TreeProblems t = new TreeProblems(null);
+		int a[] = { 9 };
+		TreeNode node = t.findKthNode(bst.root, a);
+		System.out.println(node.val);
+	}
+
+	@Test
+	public void myPostOrder() {
+		int[] b = { 4, 2, 5, 1, 6, 3, 7 };
+		BalancedBST bst = new BalancedBST(b);
+		bst.call();
+
+		TreeProblems t = new TreeProblems(null);
+		t.myPostOrder(bst.root);
+
+	}
+
+	@Test
+	public void buildTreeFromInAndPre() {
+		int[] in = { 4, 2, 5};
+		int[] pre = { 2, 4, 5 };
+
+		TreeProblems t = new TreeProblems(null);
+		TreeNode n = t.buildTreeFromInAndPre(in, pre, 0, in.length - 1);
+		System.out.println(n.val);
+
+	}
+
+	@Test
+	public void buildTreee() {
+		int[] in = { 2, 1};
+		int[] post = { 2, 1};
+
+		TreeProblems t = new TreeProblems(null);
+		TreeNode n = t.buildTreee(in, post, 0, in.length - 1);
+		System.out.println(n.val);
+
+	}
+	
+	@Test
+	public void buildTreeFromPreorderMarkers() {
+		int[] pre = {2, 1, -1, -1, 3};
+
+		TreeProblems t = new TreeProblems(null);
+		TreeNode n = t.buildTreeFromPreorderMarkers(pre, new int[1]);
+		System.out.println(n.val);
+
+	}
+	
+	
 }

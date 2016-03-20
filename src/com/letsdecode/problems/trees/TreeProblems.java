@@ -291,6 +291,44 @@ public class TreeProblems {
 
 	}
 
+	/**
+	 * Print all paths for the target sum
+	 * 
+	 */
+	public void findPaths(TreeNode root, int target, int level, int startlevel,
+			int[] a) {
+		if (root == null) {
+			return;
+		}
+
+		a[level] = root.val;
+		if (target - root.val == 0) {
+			for (int i = startlevel; i <= level; i++) {
+				System.out.print(" " + a[i]);
+			}
+			System.out.println("");
+		}
+		findPaths(root.left, target - root.val, level + 1, startlevel, a);
+		findPaths(root.right, target - root.val, level + 1, startlevel, a);
+		a[level] = 0;
+	}
+
+	/**
+	 * 
+	 */
+	public void findAllPaths(TreeNode root, int target, int level,
+			int startLevel, int[] a) {
+		if (root == null)
+			return;
+		findAllPaths(root.left, target, level + 1, startLevel + 1, a);
+		findPaths(root, target, level + 1, startLevel + 1, a);
+		findAllPaths(root.right, target, level + 1, startLevel + 1, a);
+	}
+
+	/**
+	 * 
+	 * @param root
+	 */
 	public void inorderIterative(TreeNode root) {
 		if (root == null) {
 			return;
@@ -356,23 +394,167 @@ public class TreeProblems {
 		if (node == null) {
 			return;
 		}
-		
+
 		if (leftBranch || node.isLeaf()) {
 			list.add(node);
 		}
 		leftBranch(node.left, leftBranch, list);
-		leftBranch(node.right, node.left == null? true:false, list);
+		leftBranch(node.right, node.left == null ? true : false, list);
 	}
 
-	private void rightBranch(TreeNode node, boolean rightBranch, ArrayList<TreeNode> list) {
+	private void rightBranch(TreeNode node, boolean rightBranch,
+			ArrayList<TreeNode> list) {
 		if (node == null) {
 			return;
 		}
 
-		leftBranch(node.left, node.right == null? true:false, list);
+		leftBranch(node.left, node.right == null ? true : false, list);
 		leftBranch(node.right, rightBranch, list);
 		if (rightBranch || node.isLeaf()) {
 			list.add(node);
 		}
+	}
+
+	/**
+	 * Find sum of all the paths from root-to-leaf where value of each node is a
+	 * binary bit
+	 * 
+	 * @param n
+	 * @param a
+	 */
+	public void findBinaySum(TreeNode n, int[] a) {
+		if (n == null) {
+			return;
+		}
+		int val = (n.val > 0 ? 0x1 : 0x0);
+		a[1] = ((a[1] << 1) | val);
+		if (n.left == null && n.right == null) {
+			a[0] += a[1];
+		} else {
+			findBinaySum(n.left, a);
+			findBinaySum(n.right, a);
+		}
+		a[1] >>= 1;
+	}
+
+	/*
+	 * Find if root to leaf path as a unique sum
+	 */
+	public boolean findRootToLeafSum(TreeNode n, int sum) {
+		if (n == null)
+			return false;
+		if (n.left == null && n.right == null) {
+			if (n.val == sum) {
+				return true;
+			}
+		}
+		return findRootToLeafSum(n.left, sum - n.val)
+				|| findRootToLeafSum(n.right, sum - n.val);
+	}
+
+	public void myPostOrder(TreeNode n) {
+		if (n == null) {
+			return;
+		}
+		Stack<TreeNode> s = new Stack<>();
+		s.push(n);
+		TreeNode lvn = null;
+		while (s.isEmpty() == false) {
+			if (n != null) {
+				n = n.left;
+				if (n != null) {
+					s.push(n);
+				}
+			} else {
+				TreeNode temp = s.peek();
+				if (temp.right == null || temp.right == lvn) {
+					System.out.print(temp.val + " ");
+					lvn = temp;
+					s.pop();
+				} else {
+					n = temp.right;
+					s.push(n);
+				}
+			}
+		}
+	}
+
+	public TreeNode findKthNode(TreeNode n, int a[]) {
+		if (n == null)
+			return null;
+		TreeNode ret = findKthNode(n.left, a);
+		a[0]--;
+		if (a[0] == 0) {
+			return n;
+		}
+
+		if (ret == null && a[0] > 0) {
+			ret = findKthNode(n.right, a);
+		}
+		return ret;
+	}
+
+	int k = 0;
+
+	public TreeNode buildTreeFromInAndPre(int[] in, int[] pre, int i, int j) {
+		if (i > j) {
+			return null;
+		}
+		int val = pre[k];
+		k++;
+		TreeNode n = new TreeNode(val);
+		int l = find(in, i, j, val);
+		n.left = buildTreeFromInAndPre(in, pre, i, l - 1);
+		n.right = buildTreeFromInAndPre(in, pre, l + 1, j);
+		return n;
+	}
+
+	int find(int[] in, int i, int j, int val) {
+		int l = 0;
+		for (; l <= j; l++) {
+			if (in[l] == val) {
+				break;
+			}
+		}
+		return l;
+
+	}
+
+	int m = 1;
+
+	public TreeNode buildTreee(int[] inorder, int[] postorder, int start,
+			int end) {
+
+		if (start > end)
+			return null;
+
+		TreeNode node = new TreeNode(postorder[m]);
+
+		int index = find(inorder, start, end, node.val);
+		if (index == -1) {
+			return null;
+		}
+		m--;
+		node.right = buildTreee(inorder, postorder, index + 1, end);
+		node.left = buildTreee(inorder, postorder, start, index - 1);
+
+		return node;
+	}
+
+	public TreeNode buildTreeFromPreorderMarkers(int[] preorder, int b[]) {
+		int i = b[0];
+		if (i >= preorder.length) {
+			return null;
+		}
+		int val = preorder[i];
+		b[0]++;
+		TreeNode n = null;
+		if (val != -1) {
+			n = new TreeNode(val);
+			n.left = buildTreeFromPreorderMarkers(preorder, b);
+			n.right = buildTreeFromPreorderMarkers(preorder, b);
+		}
+		return n;
+
 	}
 }

@@ -24,5 +24,16 @@ public class RightPointerBinaryTreeTest {
 		tree.printNodesByLevel(root);
 		System.out.println("");
 	}
+	
+	
+	@Test
+	public void connectSiblings() {
+		int b[] = { 4, 2, 5, 1, 6, 3, 7 };
+		RightPointerBinaryTree tree = new RightPointerBinaryTree();
+		RightPointerTreeNode root = tree.buildTree(b, 0, b.length - 1);
+		tree.printInOrder(root);
+		tree.connectSiblings(root);
+		tree.printNodesByLevel(root);
+	}
 
 }

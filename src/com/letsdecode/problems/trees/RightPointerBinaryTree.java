@@ -87,4 +87,89 @@ public class RightPointerBinaryTree extends Problem<RightPointerTreeNode> {
 		printInOrder(t.right);
 	}
 
+	public void connectSiblings(RightPointerTreeNode root) {
+		_connectSiblings(root.left, root);
+	}
+	/**
+	 * Much clearer version of buildRightPointingNodes
+	 * 
+	 * @param node
+	 * @param p
+	 */
+	private void _connectSiblings(RightPointerTreeNode node,
+			RightPointerTreeNode p) {
+		if (node == null) {
+			return;
+		}
+		RightPointerTreeNode head = null;
+		RightPointerTreeNode tail = null;
+		while (p != null) {
+			RightPointerTreeNode list = getSiblingsList(p);
+			if (head == null) {
+				head = list;
+			}
+			if (tail == null) {
+				tail = getTail(list);
+			} else {
+				tail = append(tail, list);
+			}
+			p = p.next;
+		}
+		if (head != null) {
+			_connectSiblings(head.left, head);
+		}
+
+	}
+
+	/**
+	 * Utility method of fetching the tail from a list of nodes.
+	 * 
+	 * @param node
+	 *            point the tail of the list
+	 * @return
+	 */
+	private RightPointerTreeNode getTail(RightPointerTreeNode node) {
+		RightPointerTreeNode tail = null;
+		if (node != null) {
+			while (node.next != null) {
+				node = node.next;
+			}
+			tail = node;
+		}
+		return tail;
+	}
+
+	/**
+	 * Appends new list to the tail and return the new tail returns the same
+	 * tail if list is null;
+	 * 
+	 * @param tail
+	 *            tail to append new list to
+	 * @param head
+	 *            pointing to the list
+	 * @return new or same tail
+	 */
+	private RightPointerTreeNode append(RightPointerTreeNode tail,
+			RightPointerTreeNode head) {
+		if (head == null)
+			return tail;
+		tail.next = head;
+		while (head.next != null) {
+			head = head.next;
+		}
+		return head;
+	}
+
+	/**
+	 * connects siblings are returns the list of them
+	 * @param p
+	 * @return
+	 */
+	private RightPointerTreeNode getSiblingsList(RightPointerTreeNode p) {
+		if (p.left != null) {
+			p.left.next = p.right;
+			return p.left;
+		}
+		return p.right;
+	}
 }
